@@ -1,1 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>For Khushi, from Prashant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --rose-red: #e11d48;
+            --rose-pink: #fb7185;
+        }
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: #0f172a;
+            color: white;
+            overflow: hidden;
+            touch-action: none;
+        }
+        .cursive { font-family: 'Dancing Script', cursive; }
+        
+        .step {
+            display: none;
+            height: 100vh;
+            width: 100vw;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            text-align: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: radial-gradient(circle at center, #1e1b4b 0%, #0f172a 100%);
+        }
+        .step.active { display: flex; animation: fadeIn 0.8s ease-out forwards; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .floating-rose {
+            position: absolute;
+            pointer-events: none;
+            z-index: 1;
+            filter: drop-shadow(0 0 10px rgba(225, 29, 72, 0.5));
+        }
+
+        .btn-gradient {
+            background: linear-gradient(45deg, var(--rose-red), var(--rose-pink));
+            box-shadow: 0 4px 15px rgba(225, 29, 72, 0.4);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .btn-gradient:active { transform: scale(0.92); }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+        }
+
+        /* Specialized Animation for the Big Rose */
+        .big-rose {
+            font-size: 8rem;
+            filter: drop-shadow(0 0 20px rgba(225, 29, 72, 0.8));
+            animation: heartBeat 1.5s infinite;
+        }
+        @keyframes heartBeat {
+            0% { transform: scale(1); }
+            14% { transform: scale(1.1); }
+            28% { transform: scale(1); }
+            42% { transform: scale(1.15); }
+            70% { transform: scale(1); }
+        }
+
+        .pulse-ring {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            border: 2px solid var(--rose-red);
+            border-radius: 50%;
+            animation: ringPulse 2s infinite;
+        }
+        @keyframes ringPulse {
+            0% { transform: scale(0.8); opacity: 1; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+
+        /* Progress Bar */
+        .progress-dot {
+            height: 6px;
+            width: 6px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            margin: 0 4px;
+            transition: all 0.3s;
+        }
+        .progress-dot.active {
+            width: 20px;
+            border-radius: 10px;
+            background: var(--rose-red);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background Elements -->
+    <div id="bg-stars"></div>
+    <div id="rose-particles"></div>
+
+    <!-- Navigation / Progress -->
+    <div class="fixed top-6 w-full flex justify-center z-50">
+        <div class="flex" id="progress-container">
+            <div class="progress-dot active"></div>
+            <div class="progress-dot"></div>
+            <div class="progress-dot"></div>
+            <div class="progress-dot"></div>
+            <div class="progress-dot"></div>
+        </div>
+    </div>
+
+    <!-- Step 1: The Intro -->
+    <div class="step active" id="step1">
+        <div class="big-rose mb-8">🌹</div>
+        <h1 class="text-4xl font-bold mb-4 cursive text-rose-400">Hello Khushi!</h1>
+        <p class="text-gray-300 text-lg px-6 leading-relaxed">
+            Prashant has built a digital garden just for you.<br>
+            <span class="text-rose-500 font-bold italic">Ready to see something beautiful?</span>
+        </p>
+        <button onclick="nextStep(2)" class="btn-gradient mt-12 px-10 py-4 rounded-full font-bold text-white uppercase tracking-widest">
+            Enter My Heart 💖
+        </button>
+    </div>
+
+    <!-- Step 2: The Flirty Facts -->
+    <div class="step" id="step2">
+        <div class="glass-panel p-8 w-full max-w-xs relative overflow-hidden">
+            <div class="text-rose-500 text-5xl mb-4">✨</div>
+            <p id="flirty-text" class="text-xl font-medium leading-relaxed">
+                "Khushi, tumhare smile ke aage toh asli Rose bhi fake lagta hai."
+            </p>
+        </div>
+        <p class="mt-6 text-sm text-gray-400">Tap to see another truth...</p>
+        <div class="mt-12 flex space-x-4">
+            <button onclick="changeFlirt()" class="border border-rose-500 text-rose-500 px-6 py-3 rounded-full font-bold">More Facts</button>
+            <button onclick="nextStep(3)" class="btn-gradient px-8 py-3 rounded-full font-bold">That's True! 👉</button>
+        </div>
+    </div>
+
+    <!-- Step 3: Interactive Garden -->
+    <div class="step" id="step3">
+        <h2 class="text-2xl font-bold mb-2">Build Your Bouquet</h2>
+        <p class="text-gray-400 mb-8 text-sm">Tap the screen to catch the roses Prashant is sending!</p>
+        <div id="garden-touch-zone" class="w-full flex-grow relative overflow-hidden border border-dashed border-rose-900/50 rounded-3xl" onclick="spawnRose(event)">
+            <div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-20">
+                <span class="text-8xl">🧺</span>
+            </div>
+            <div id="score-counter" class="absolute top-4 right-4 bg-rose-600 px-3 py-1 rounded-full text-xs font-bold">Roses: 0</div>
+        </div>
+        <button id="garden-next" onclick="nextStep(4)" class="btn-gradient mt-6 px-10 py-4 rounded-full font-bold opacity-50 pointer-events-none">
+            Collect 10 Roses to Continue
+        </button>
+    </div>
+
+    <!-- Step 4: The Love Meter -->
+    <div class="step" id="step4">
+        <h2 class="text-2xl font-bold mb-8">How much do you miss Prashant?</h2>
+        <div class="w-full px-10">
+            <input type="range" min="0" max="100" value="10" id="love-slider" class="w-full h-4 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-rose-500" oninput="updateMeter(this.value)">
+            <div id="meter-label" class="mt-6 text-4xl font-bold text-rose-500 cursive">Thoda Sa... 🤏</div>
+        </div>
+        <div id="meter-visual" class="mt-12 text-7xl transition-all duration-300">🧸</div>
+        <button id="meter-next" onclick="nextStep(5)" class="btn-gradient mt-12 px-10 py-4 rounded-full font-bold hidden">
+            Show My Gift 🎁
+        </button>
+    </div>
+
+    <!-- Step 5: Final Message -->
+    <div class="step" id="step5">
+        <div class="relative">
+            <div class="pulse-ring"></div>
+            <div class="text-8xl">🥀</div>
+        </div>
+        <h1 class="text-4xl font-bold mt-12 cursive text-rose-500">Happy Rose Day, Khushi!</h1>
+        <div class="glass-panel p-8 mt-6 w-full max-w-md">
+            <p class="italic text-lg text-gray-200">
+                "Roses are red, <br>
+                Sky is blue... <br>
+                Wese toh main cool hoon, <br>
+                Par pagal hoon for you!"
+            </p>
+            <hr class="my-6 border-rose-900">
+            <p class="text-sm text-rose-300 font-bold uppercase tracking-widest">A Promise from Prashant:</p>
+            <p class="mt-2 text-gray-300">I may not always bring you real flowers, but I promise to keep your life blooming with happiness every single day. You are my most precious Rose. ❤️</p>
+        </div>
+        
+        <div class="mt-8 flex flex-col items-center">
+            <p class="text-xs text-gray-500 mb-4">Made with love by Prashant</p>
+            <button onclick="restart()" class="text-rose-500 text-sm underline">Replay the Magic</button>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        let collectedRoses = 0;
+        const flirtyLines = [
+            "Khushi, tumhare smile ke aage toh asli Rose bhi fake lagta hai. 😉",
+            "Suno! Zyada blush mat karo, varna garden ke phool sharma jayenge. 🔥",
+            "Google Maps pe rasta mil jayega, par mere dil ka raasta sirf tumhare pass hai.",
+            "Phool toh bahut hain, par meri favorite 'Khushi' toh tum hi ho. 🌹",
+            "Wese toh I'm very busy, par tumhare liye 24/7 romantic mode on hai! ❤️",
+            "You don't need a rose, because your vibes are enough to brighten my day."
+        ];
+        let flirtIdx = 0;
+
+        function nextStep(step) {
+            document.getElementById(`step${currentStep}`).classList.remove('active');
+            currentStep = step;
+            document.getElementById(`step${currentStep}`).classList.add('active');
+            
+            // Update progress dots
+            const dots = document.querySelectorAll('.progress-dot');
+            dots.forEach((dot, idx) => {
+                dot.classList.toggle('active', idx < currentStep);
+            });
+
+            if(step === 3) startGarden();
+        }
+
+        function changeFlirt() {
+            flirtIdx = (flirtIdx + 1) % flirtyLines.length;
+            const el = document.getElementById('flirty-text');
+            el.style.opacity = 0;
+            setTimeout(() => {
+                el.innerText = flirtyLines[flirtIdx];
+                el.style.opacity = 1;
+            }, 200);
+        }
+
+        function spawnRose(e) {
+            const zone = document.getElementById('garden-touch-zone');
+            const rose = document.createElement('div');
+            rose.innerText = '🌹';
+            rose.className = 'absolute text-3xl transition-all duration-1000 select-none';
+            
+            // Get coordinates relative to zone
+            const rect = zone.getBoundingClientRect();
+            const x = e.clientX - rect.left - 15;
+            const y = e.clientY - rect.top - 15;
+            
+            rose.style.left = x + 'px';
+            rose.style.top = y + 'px';
+            zone.appendChild(rose);
+
+            collectedRoses++;
+            document.getElementById('score-counter').innerText = `Roses: ${collectedRoses}`;
+
+            if(collectedRoses >= 10) {
+                const btn = document.getElementById('garden-next');
+                btn.classList.remove('opacity-50', 'pointer-events-none');
+                btn.innerText = "Wow! Prashant is Impressed! Next →";
+            }
+
+            // Animation
+            setTimeout(() => {
+                rose.style.transform = 'translateY(-100px) scale(1.5) rotate(20deg)';
+                rose.style.opacity = '0';
+            }, 10);
+            setTimeout(() => rose.remove(), 1000);
+        }
+
+        function updateMeter(val) {
+            const label = document.getElementById('meter-label');
+            const visual = document.getElementById('meter-visual');
+            const nextBtn = document.getElementById('meter-next');
+
+            if(val < 30) {
+                label.innerText = "Thoda Sa... 🤏";
+                visual.innerText = "🧸";
+            } else if (val < 70) {
+                label.innerText = "Bahut Saara! 😍";
+                visual.innerText = "🥰";
+            } else if (val < 95) {
+                label.innerText = "Limits se zyada! 🔥";
+                visual.innerText = "🥵";
+            } else {
+                label.innerText = "INFINITE! ♾️❤️";
+                visual.innerText = "💍";
+                nextBtn.classList.remove('hidden');
+                nextBtn.classList.add('animate-bounce');
+            }
+            
+            visual.style.transform = `scale(${1 + val/100})`;
+        }
+
+        function createBgStars() {
+            const container = document.getElementById('bg-stars');
+            for(let i=0; i<50; i++) {
+                const star = document.createElement('div');
+                star.style.position = 'absolute';
+                star.style.width = '2px';
+                star.style.height = '2px';
+                star.style.background = 'white';
+                star.style.top = Math.random() * 100 + 'vh';
+                star.style.left = Math.random() * 100 + 'vw';
+                star.style.opacity = Math.random();
+                container.appendChild(star);
+            }
+        }
+
+        function restart() {
+            collectedRoses = 0;
+            document.getElementById('score-counter').innerText = `Roses: 0`;
+            document.getElementById('garden-next').classList.add('opacity-50', 'pointer-events-none');
+            document.getElementById('meter-next').classList.add('hidden');
+            document.getElementById('love-slider').value = 10;
+            nextStep(1);
+        }
+
+        // Initialize
+        window.onload = () => {
+            createBgStars();
+            // Optional: Background petal rain
+            setInterval(() => {
+                const p = document.createElement('div');
+                p.className = 'floating-rose text-xl';
+                p.innerHTML = '🌸';
+                p.style.left = Math.random() * 100 + 'vw';
+                p.style.top = '-20px';
+                p.style.transition = 'all 5s linear';
+                document.getElementById('rose-particles').appendChild(p);
+                setTimeout(() => {
+                    p.style.transform = `translate(${Math.random()*100 - 50}px, 110vh) rotate(360deg)`;
+                    p.style.opacity = '0';
+                }, 100);
+                setTimeout(() => p.remove(), 6000);
+            }, 1000);
+        };
+    </script>
+</body>
+</html>
+
 
