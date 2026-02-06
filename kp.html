@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Khushi's Rose Day - 10 Steps of Chaos & Love</title>
+    <title>Rose Day for Khushi 🌹</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;900&family=Bungee&display=swap" rel="stylesheet">
     <style>
@@ -25,19 +25,20 @@
             justify-content: center;
             padding: 1.5rem;
             position: absolute;
+            top: 0; left: 0;
             transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .step.active { display: flex; animation: slideIn 0.5s forwards; }
 
         @keyframes slideIn {
-            from { opacity: 0; transform: scale(0.9) translateY(20px); }
+            from { opacity: 0; transform: scale(0.8) translateY(50px); }
             to { opacity: 1; transform: scale(1) translateY(0); }
         }
 
         .meme-card {
             background: #fff;
             color: #000;
-            border: 4px solid #000;
+            border: 5px solid #000;
             box-shadow: 10px 10px 0px #e11d48;
             padding: 1.5rem;
             width: 90%;
@@ -47,196 +48,220 @@
         .btn-main {
             background: #e11d48;
             color: white;
-            padding: 1rem 2rem;
+            padding: 1.2rem 2.5rem;
             border: 4px solid #000;
-            box-shadow: 4px 4px 0px #fff;
+            box-shadow: 5px 5px 0px #fff;
             font-family: 'Bungee';
-            transition: 0.2s;
+            font-size: 1.2rem;
+            transition: 0.1s;
         }
-        .btn-main:active { transform: translate(2px, 2px); box-shadow: 0px 0px 0px #fff; }
+        .btn-main:active { transform: translate(3px, 3px); box-shadow: 0px 0px 0px #fff; }
 
         .emoji-float {
             position: absolute;
             pointer-events: none;
             z-index: 100;
-            animation: floatUp 1.5s ease-out forwards;
+            animation: floatUp 1.2s ease-out forwards;
         }
         @keyframes floatUp {
             0% { transform: translateY(0) scale(1); opacity: 1; }
-            100% { transform: translateY(-300px) scale(2.5) rotate(20deg); opacity: 0; }
+            100% { transform: translateY(-400px) scale(3) rotate(45deg); opacity: 0; }
         }
 
         .progress-bar {
             position: fixed;
-            top: 0;
-            left: 0;
-            height: 8px;
+            top: 0; left: 0;
+            height: 10px;
             background: #e11d48;
             transition: width 0.4s ease;
             z-index: 1000;
         }
 
-        input[type=range] {
-            accent-color: #e11d48;
+        #music-status {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            color: black;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 12px;
+            border: 2px solid #e11d48;
+            z-index: 2000;
         }
     </style>
 </head>
 <body>
 
     <div class="progress-bar" id="progress"></div>
+    <div id="music-status">🔊 Audio: Waiting</div>
 
-    <!-- Hidden Audio Elements -->
-    <audio id="bg-music" loop src="https://assets.mixkit.co/music/preview/mixkit-beautiful-dream-493.mp3"></audio>
-    <audio id="sfx-pop" src="https://assets.mixkit.co/sfx/preview/mixkit-simple-game-countdown-921.mp3"></audio>
-    <audio id="sfx-win" src="https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3"></audio>
-    <audio id="sfx-cheer" src="https://assets.mixkit.co/sfx/preview/mixkit-human-crowd-celebration-cheer-451.mp3"></audio>
-    <audio id="sfx-laugh" src="https://assets.mixkit.co/sfx/preview/mixkit-funny-group-giggle-445.mp3"></audio>
+    <!-- AUDIO SYSTEM - Using very reliable URLs -->
+    <audio id="bg-music" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="sfx-pop"><source src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3"></audio>
+    <audio id="sfx-win"><source src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3"></audio>
+    <audio id="sfx-laugh"><source src="https://assets.mixkit.co/active_storage/sfx/2802/2802-preview.mp3"></audio>
+    <audio id="sfx-cheer"><source src="https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3"></audio>
 
-    <!-- STEP 1: THE POV -->
-    <div class="step active bg-indigo-600" id="step1">
-        <div class="meme-card text-center rotate-2">
-            <h1 class="meme-font text-2xl">Step 1: POV</h1>
-            <p class="text-xl font-black mt-4 italic text-black">You just opened a link from Prashant... and now you're stuck in his love trap. 😉</p>
-            <div class="text-7xl mt-4">🕸️❤️</div>
+    <!-- STEP 1: AUDIO UNLOCKER -->
+    <div class="step active bg-rose-600" id="step1">
+        <div class="text-7xl mb-6">📢</div>
+        <div class="meme-card text-center rotate-2 mb-8">
+            <h1 class="meme-font text-2xl">WAIT!</h1>
+            <p class="font-bold mt-2">Prashant's surprise has music & vibes. Turn up the volume!</p>
         </div>
-        <button onclick="startJourney()" class="btn-main mt-10">CHALO START KARO!</button>
-        <p class="mt-4 text-xs animate-pulse">Music will start on tap 🎵</p>
+        <button onclick="unlockAudio()" class="btn-main animate-bounce">
+            🔊 TAP TO UNMUTE & START
+        </button>
     </div>
 
-    <!-- STEP 2: THE IDENTITY CHECK -->
-    <div class="step bg-yellow-400 text-black" id="step2">
-        <h1 class="meme-font text-3xl mb-8">Quick Security Check!</h1>
-        <p class="mb-4 font-bold text-black">Are you the prettiest girl in the world named Khushi?</p>
-        <div class="flex flex-col gap-4 w-full px-10">
-            <button onclick="nextStep(3); playSound('win')" class="btn-main bg-green-500">YES, THAT'S ME 💅</button>
-            <button id="no-btn" onmouseover="moveButton(this)" ontouchstart="moveButton(this)" onclick="playSound('laugh')" class="bg-gray-200 border-4 border-black p-4 font-bold text-black">NO, I'M A POTATO 🥔</button>
-        </div>
-    </div>
-
-    <!-- STEP 3: THE VIBE CHECK -->
-    <div class="step bg-purple-600" id="step3">
-        <div class="text-8xl mb-6">🤔</div>
-        <h1 class="meme-font text-2xl text-center">Current Vibe Check?</h1>
-        <div class="grid grid-cols-2 gap-4 mt-8 w-full max-w-xs">
-            <button onclick="nextStep(4)" class="bg-white text-black p-4 rounded-xl font-bold">Happy/Cute 😊</button>
-            <button onclick="nextStep(4)" class="bg-white text-black p-4 rounded-xl font-bold">Nakhre Waali 🙄</button>
-            <button onclick="nextStep(4)" class="bg-white text-black p-4 rounded-xl font-bold">Hungry/Gussa 🍕</button>
-            <button onclick="nextStep(4)" class="bg-white text-black p-4 rounded-xl font-bold">Missing Me ❤️</button>
-        </div>
-    </div>
-
-    <!-- STEP 4: THE COMPLIMENT SHUFFLE -->
-    <div class="step bg-pink-500" id="step4">
+    <!-- STEP 2: WELCOME -->
+    <div class="step bg-indigo-700" id="step2">
         <div class="meme-card -rotate-2">
-            <p id="comp-text" class="text-xl font-black italic text-black text-center">"Khushi, tumhara chehra dekh ke toh Chand bhi 'Retire' hona chahta hai."</p>
+            <h1 class="meme-font text-2xl">Hello Khushi!</h1>
+            <p class="mt-4 font-black italic">Taiyaar ho for the most "Cringe + Cute" journey of your life? 😂❤️</p>
         </div>
-        <div class="flex flex-col gap-4 mt-10">
-            <button onclick="shuffleComp()" class="bg-black text-white px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest">Generate More Makhan 🧈</button>
-            <button onclick="nextStep(5)" class="btn-main bg-white text-black">BAS BAS, NEXT! 😂</button>
+        <button onclick="nextStep(3)" class="btn-main mt-10">YES, SHOW ME!</button>
+    </div>
+
+    <!-- STEP 3: SECURITY CHECK -->
+    <div class="step bg-yellow-400" id="step3">
+        <h1 class="meme-font text-3xl text-black mb-8">Security Check!</h1>
+        <p class="text-black font-bold mb-6">Are you the one Prashant dreams about?</p>
+        <div class="flex flex-col gap-4 w-full px-10">
+            <button onclick="nextStep(4); playSound('win')" class="btn-main bg-green-500">YES, I'M THE QUEEN 👑</button>
+            <button id="no-btn" onmouseover="moveButton(this)" ontouchstart="moveButton(this)" onclick="playSound('laugh')" class="bg-gray-200 border-4 border-black p-4 text-black font-bold">NO, I'M A STRANGER 🕵️‍♀️</button>
         </div>
     </div>
 
-    <!-- STEP 5: THE BEAUTY SCALE -->
-    <div class="step bg-blue-500" id="step5">
-        <h1 class="meme-font text-2xl text-center mb-10">How much do you score yourself out of 10?</h1>
-        <div class="w-full px-10">
-            <input type="range" min="1" max="11" value="5" class="w-full" oninput="updateScore(this.value)">
-            <h1 id="score-val" class="text-9xl font-black text-center mt-6">5</h1>
-            <p id="score-msg" class="text-center font-bold mt-4 italic">Theek thaak...</p>
-        </div>
-        <button id="step5-btn" onclick="nextStep(6)" class="btn-main mt-10 hidden">NEXT 🚀</button>
-    </div>
-
-    <!-- STEP 6: CATCH THE ROSES -->
-    <div class="step bg-rose-900" id="step6">
-        <h1 class="meme-font text-xl mb-4">Game Time! Catch 10 Roses 🌹</h1>
-        <div id="game-zone" class="w-full h-64 border-4 border-white rounded-3xl relative overflow-hidden bg-black/50" onclick="catchRose(event)">
-            <div id="game-score" class="absolute top-2 left-2 font-bold z-10">Score: 0</div>
-            <div class="absolute inset-0 flex items-center justify-center opacity-20 pointer-events-none text-white">TAP TO CATCH!</div>
-        </div>
-        <p class="text-xs mt-4 text-gray-400">Prashant is throwing roses at you!</p>
-        <button id="step6-btn" onclick="nextStep(7); playSound('win')" class="btn-main mt-6 hidden">GOOD JOB! NEXT →</button>
-    </div>
-
-    <!-- STEP 7: THE PRASHANT IQ TEST -->
-    <div class="step bg-orange-500" id="step7">
-        <h1 class="meme-font text-2xl text-center mb-8">Quick Quiz: Who is Prashant?</h1>
-        <div class="flex flex-col gap-4 w-full px-10 max-w-md">
-            <button onclick="nextStep(8)" class="bg-white text-black p-4 border-2 border-black font-bold">A) Your Biggest Fan</button>
-            <button onclick="nextStep(8)" class="bg-white text-black p-4 border-2 border-black font-bold">B) The Guy who misses you 24/7</button>
-            <button onclick="nextStep(8)" class="bg-white text-black p-4 border-2 border-black font-bold">C) Future Husband? 👀</button>
-            <button onclick="nextStep(8)" class="bg-white text-black p-4 border-2 border-black font-bold">D) All of the above! ✅</button>
+    <!-- STEP 4: CURRENT VIBE -->
+    <div class="step bg-purple-600" id="step4">
+        <h1 class="meme-font text-2xl text-center px-6">Current Vibe Kya Hai?</h1>
+        <div class="grid grid-cols-2 gap-4 mt-8 w-full max-w-xs">
+            <button onclick="nextStep(5)" class="bg-white text-black p-4 border-4 border-black font-black">CUTE 😊</button>
+            <button onclick="nextStep(5)" class="bg-white text-black p-4 border-4 border-black font-black">NAKHRE 🙄</button>
+            <button onclick="nextStep(5)" class="bg-white text-black p-4 border-4 border-black font-black">MISSING HIM ❤️</button>
+            <button onclick="nextStep(5)" class="bg-white text-black p-4 border-4 border-black font-black">BHUK LAGI HAI 🍕</button>
         </div>
     </div>
 
-    <!-- STEP 8: THE TRUTH BOMB -->
-    <div class="step bg-red-600" id="step8">
-        <div class="text-8xl mb-6">💣</div>
+    <!-- STEP 5: COMPLIMENT -->
+    <div class="step bg-pink-500" id="step5">
         <div class="meme-card rotate-1">
-            <h1 class="meme-font text-xl text-black">TRUTH BOMB:</h1>
-            <p class="mt-4 font-bold text-black">Log kehte hain Rose Day pe Rose dena chahiye... Par main kya karu? Mere paas toh poora 'Khushi' ka garden hai! ❤️</p>
+            <p id="comp-text" class="text-xl font-black italic text-black text-center">"Khushi, tumhare smile ke aage toh Google ki ratings bhi fail hain!"</p>
         </div>
-        <button onclick="nextStep(9)" class="btn-main mt-10">SO CHEESY! NEXT 🧀</button>
+        <div class="flex flex-col gap-4 mt-12">
+            <button onclick="shuffleComp()" class="bg-black text-white px-6 py-2 rounded-xl text-xs font-bold uppercase tracking-widest">More Makhan? 🧈</button>
+            <button onclick="nextStep(6)" class="btn-main bg-white text-black">BAS BAS, NEXT! 🤣</button>
+        </div>
     </div>
 
-    <!-- STEP 9: THE ROSE LOADING -->
-    <div class="step bg-black" id="step9">
-        <div id="loading-rose" class="text-9xl animate-pulse">🥀</div>
-        <h1 class="meme-font text-xl mt-8">Manifesting a real Rose...</h1>
-        <div class="w-64 h-2 bg-gray-800 mt-4 rounded-full overflow-hidden">
-            <div id="load-bar" class="h-full bg-rose-500 w-0"></div>
+    <!-- STEP 6: BEAUTY SLIDER -->
+    <div class="step bg-blue-500" id="step5">
+        <h1 class="meme-font text-2xl text-center mb-10 px-6">Rate your beauty out of 10:</h1>
+        <div class="w-full px-10">
+            <input type="range" min="1" max="11" value="1" class="w-full h-8" oninput="updateScore(this.value)">
+            <h1 id="score-val" class="text-9xl font-black text-center mt-6">1</h1>
+            <p id="score-msg" class="text-center font-bold mt-4 italic">Kam hai... aur badhao!</p>
         </div>
-        <p id="load-text" class="mt-4 text-gray-500">Sending love to Khushi's phone...</p>
+        <button id="step5-btn" onclick="nextStep(7)" class="btn-main mt-10 hidden">BEYOND SCALE! 🚀</button>
     </div>
 
-    <!-- STEP 10: THE FINALE -->
+    <!-- STEP 7: MINI GAME -->
+    <div class="step bg-emerald-700" id="step6">
+        <h1 class="meme-font text-xl mb-4 text-center">CATCH 10 ROSES FROM PRASHANT! 🌹</h1>
+        <div id="game-zone" class="w-full h-64 border-8 border-black rounded-3xl relative overflow-hidden bg-black/50" onclick="catchRose(event)">
+            <div id="game-score" class="absolute top-2 left-4 font-black text-2xl z-20">SCORE: 0</div>
+            <div class="absolute inset-0 flex items-center justify-center opacity-30 pointer-events-none text-2xl font-black">TAP HERE! 🌹</div>
+        </div>
+        <button id="step6-btn" onclick="nextStep(8); playSound('win')" class="btn-main mt-6 hidden">OP! NEXT →</button>
+    </div>
+
+    <!-- STEP 8: QUIZ -->
+    <div class="step bg-orange-500" id="step7">
+        <h1 class="meme-font text-2xl text-center mb-8 px-6">Sabse zyada pyar kaun karta hai?</h1>
+        <div class="flex flex-col gap-4 w-full px-10 max-w-md">
+            <button onclick="nextStep(9)" class="bg-white text-black p-4 border-4 border-black font-black uppercase">A) Shah Rukh Khan</button>
+            <button onclick="nextStep(9)" class="bg-white text-black p-4 border-4 border-black font-black uppercase">B) Prashant (Obviously) ❤️</button>
+            <button onclick="nextStep(9)" class="bg-white text-black p-4 border-4 border-black font-black uppercase">C) Your Teddy Bear</button>
+            <button onclick="nextStep(9)" class="bg-white text-black p-4 border-4 border-black font-black uppercase">D) All of the above! ✅</button>
+        </div>
+    </div>
+
+    <!-- STEP 9: TRUTH -->
+    <div class="step bg-red-600" id="step8">
+        <div class="text-8xl mb-6">🌹</div>
+        <div class="meme-card -rotate-1">
+            <h1 class="meme-font text-xl text-black">MESSAGE FOR KHUSHI:</h1>
+            <p class="mt-4 font-bold text-black leading-tight">
+                "Roses are red, <br>
+                Violets are blue... <br>
+                Main bahut lucky hoon, <br>
+                To have someone like YOU!"
+            </p>
+        </div>
+        <button onclick="nextStep(10)" class="btn-main mt-10">LAST STEP! 🥺</button>
+    </div>
+
+    <!-- STEP 10: FINALE -->
     <div class="step bg-black" id="step10">
-        <div id="final-emojis" class="absolute inset-0 pointer-events-none"></div>
-        <div class="text-8xl mb-4">🌹</div>
-        <h1 class="meme-font text-5xl text-rose-500 text-center">HAPPY ROSE DAY!</h1>
-        <p class="text-3xl mt-4 text-white italic">Khushi ❤️ Prashant</p>
+        <div id="confetti" class="absolute inset-0 pointer-events-none"></div>
+        <div class="text-9xl mb-4 animate-bounce">🌹</div>
+        <h1 class="meme-font text-5xl text-rose-500 text-center leading-none">HAPPY<br>ROSE DAY<br>KHUSHI!</h1>
         
-        <div class="meme-card mt-10 rotate-3 text-black">
-            <p class="font-bold">Happy Rose Day to the girl who makes my heart go 'Dhak-Dhak' like a Bollywood movie! I love you, Khushi! 🌹✨</p>
+        <div class="meme-card mt-10 rotate-2 text-black text-center">
+            <p class="font-black text-lg">"Prashant loves you more than anything! 💖✨"</p>
         </div>
         
-        <button onclick="location.reload()" class="mt-12 text-gray-500 text-xs underline">REPLAY THE LOVE STORY</button>
+        <button onclick="location.reload()" class="mt-12 text-gray-500 text-xs uppercase tracking-widest">Restart Journey</button>
     </div>
 
     <script>
-        let step = 1;
+        let currentStep = 1;
         let rosesCaught = 0;
-        const totalSteps = 10;
+        let totalSteps = 10;
+        let audioContextUnlocked = false;
 
-        // Initialize Audio Context (Browser requirement)
-        function startJourney() {
-            const music = document.getElementById('bg-music');
-            music.volume = 0.5;
-            music.play().catch(e => console.log("Audio play failed, waiting for more interaction."));
-            nextStep(2);
+        const bgMusic = document.getElementById('bg-music');
+        const musicStatus = document.getElementById('music-status');
+
+        function unlockAudio() {
+            // This is the magic part for browsers
+            bgMusic.play().then(() => {
+                bgMusic.volume = 0.4;
+                audioContextUnlocked = true;
+                musicStatus.innerText = "🔊 Audio: ON";
+                nextStep(2);
+            }).catch(err => {
+                console.log("Audio still blocked", err);
+                // Fallback: Continue without music but keep trying
+                nextStep(2);
+            });
         }
 
-        function playSound(type) {
-            const sounds = {
-                pop: document.getElementById('sfx-pop'),
-                win: document.getElementById('sfx-win'),
-                cheer: document.getElementById('sfx-cheer'),
-                laugh: document.getElementById('sfx-laugh')
-            };
-            if(sounds[type]) {
-                sounds[type].currentTime = 0;
-                sounds[type].play();
+        function playSound(id) {
+            const sound = document.getElementById('sfx-' + id);
+            if(sound) {
+                sound.currentTime = 0;
+                sound.play().catch(e => console.log("SFX blocked"));
             }
         }
 
         function nextStep(n) {
-            document.getElementById(`step${step}`).classList.remove('active');
-            step = n;
-            document.getElementById(`step${step}`).classList.add('active');
+            document.getElementById(`step${currentStep}`).classList.remove('active');
+            currentStep = n;
+            document.getElementById(`step${currentStep}`).classList.add('active');
             document.getElementById('progress').style.width = (n/totalSteps * 100) + '%';
-            playSound('pop');
+            
+            // Try to force music if it didn't start
+            if(currentStep > 1 && bgMusic.paused) {
+                bgMusic.play().catch(e => {});
+            }
 
-            if(n === 9) startLoading();
+            playSound('pop');
             if(n === 10) {
                 playSound('cheer');
                 startConfetti();
@@ -245,27 +270,27 @@
 
         function spawnEmoji(emoji, x, y) {
             const e = document.createElement('div');
-            e.className = 'emoji-float text-5xl';
+            e.className = 'emoji-float text-6xl';
             e.innerText = emoji;
             e.style.left = (x || Math.random() * 80 + 10) + '%';
             e.style.top = (y || 70) + '%';
             document.body.appendChild(e);
-            setTimeout(() => e.remove(), 1500);
+            setTimeout(() => e.remove(), 1200);
         }
 
         function moveButton(btn) {
             btn.style.position = 'absolute';
-            btn.style.left = Math.random() * 60 + 20 + '%';
-            btn.style.top = Math.random() * 60 + 20 + '%';
+            btn.style.left = Math.random() * 60 + 10 + '%';
+            btn.style.top = Math.random() * 60 + 10 + '%';
             playSound('pop');
         }
 
         const compliments = [
-            "Khushi, tumhare smile ke aage toh filters bhi fail hain! ✨",
-            "Roses are red, your DP is fire, falling for you is my only desire! 🔥",
-            "Suno! Zyada cute mat bano, varna nazar lag jayegi (Meri!) 😉",
-            "Pov: You're dating the best guy (Prashant) in the world. 😎",
-            "If being beautiful was a crime, Khushi would be in jail for life! 🚔"
+            "Khushi, tumhare smile ke aage filter fail hain! ✨",
+            "Roses are red, your DP is fire! 🔥",
+            "Suno! Zyada cute mat bano, varna nazar lag jayegi! 😉",
+            "If being beautiful was a crime, you'd be in jail! 🚔",
+            "Prashant + Khushi = Best Jodi Ever! 💑"
         ];
 
         function shuffleComp() {
@@ -280,12 +305,11 @@
             const btn = document.getElementById('step5-btn');
             val.innerText = v;
             
-            if(v < 5) msg.innerText = "Liar! 😂";
-            else if(v < 10) msg.innerText = "Almost there... keep sliding!";
-            else if(v == 10) msg.innerText = "Okay, beautiful! 😍";
+            if(v < 5) msg.innerText = "Koshish karo... 🙄";
+            else if(v < 11) msg.innerText = "Higher! Aur higher!";
             else {
                 val.innerText = "11/10";
-                msg.innerText = "YES! BEYOND LIMITS! 🔥";
+                msg.innerText = "PERFECT! 🔥👑";
                 btn.classList.remove('hidden');
                 spawnEmoji('👑');
                 playSound('win');
@@ -294,7 +318,7 @@
 
         function catchRose(e) {
             rosesCaught++;
-            document.getElementById('game-score').innerText = `Score: ${rosesCaught}`;
+            document.getElementById('game-score').innerText = `SCORE: ${rosesCaught}`;
             spawnEmoji('🌹', (e.clientX/window.innerWidth)*100, (e.clientY/window.innerHeight)*100);
             playSound('pop');
             
@@ -303,32 +327,15 @@
             }
         }
 
-        function startLoading() {
-            let p = 0;
-            const bar = document.getElementById('load-bar');
-            const txt = document.getElementById('load-text');
-            const interval = setInterval(() => {
-                p += 1;
-                bar.style.width = p + '%';
-                if(p === 30) txt.innerText = "Collecting fresh petals...";
-                if(p === 60) txt.innerText = "Adding extra 'Khushi'...";
-                if(p === 90) txt.innerText = "Prashant is blushing...";
-                if(p >= 100) {
-                    clearInterval(interval);
-                    setTimeout(() => nextStep(10), 500);
-                }
-            }, 50);
-        }
-
         function startConfetti() {
             setInterval(() => {
-                spawnEmoji(['🌹','💖','😻','✨','🔥','🌷'][Math.floor(Math.random()*6)]);
-            }, 400);
+                spawnEmoji(['🌹','💖','✨','🔥',' Tulip','😻'][Math.floor(Math.random()*6)]);
+            }, 300);
         }
 
-        // Global touch interaction for final step
+        // Global touch for final step
         window.onclick = (e) => {
-            if(step === 10) {
+            if(currentStep === 10) {
                 spawnEmoji('🌹', (e.clientX/window.innerWidth)*100, (e.clientY/window.innerHeight)*100);
                 playSound('pop');
             }
