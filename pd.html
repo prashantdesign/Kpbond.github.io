@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>For Khushi ❤️ Prashant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #e11d48;
+            --glass: rgba(255, 255, 255, 0.9);
+        }
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%);
+            overflow: hidden;
+            touch-action: none;
+        }
+        .cursive { font-family: 'Dancing Script', cursive; }
+        
+        .step-container {
+            display: none;
+            height: 100vh;
+            width: 100vw;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            position: absolute;
+            transition: all 0.5s ease-in-out;
+        }
+        .step-container.active { 
+            display: flex; 
+            animation: slideIn 0.7s cubic-bezier(0.23, 1, 0.32, 1) forwards; 
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(40px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 35px;
+            box-shadow: 0 25px 50px -12px rgba(225, 29, 72, 0.15);
+            padding: 2rem 1.5rem;
+            width: 100%;
+            max-width: 360px;
+            text-align: center;
+        }
+
+        /* Heart Slider */
+        .slider-track {
+            width: 300px;
+            height: 75px;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 100px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 25px;
+            border: 2px solid rgba(225, 29, 72, 0.1);
+            overflow: hidden;
+        }
+        .slider-heart {
+            width: 65px;
+            height: 65px;
+            background: #fff;
+            border: 3px solid var(--primary);
+            border-radius: 50%;
+            position: absolute;
+            left: 117px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 20;
+            box-shadow: 0 5px 15px rgba(225, 29, 72, 0.3);
+            cursor: grab;
+        }
+
+        .shake { animation: shakeEffect 0.4s ease-in-out; }
+        @keyframes shakeEffect {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-10px); }
+            40%, 80% { transform: translateX(10px); }
+        }
+
+        .btn-next {
+            background: var(--primary);
+            color: white;
+            padding: 1rem 3rem;
+            border-radius: 50px;
+            font-weight: 800;
+            margin-top: 2rem;
+            box-shadow: 0 10px 20px rgba(225, 29, 72, 0.3);
+            transition: 0.2s;
+        }
+        .btn-next:active { transform: scale(0.95); }
+
+        .progress-indicator {
+            position: fixed;
+            top: 2.5rem;
+            display: flex;
+            gap: 6px;
+            z-index: 100;
+        }
+        .dot { height: 6px; width: 6px; background: #cbd5e1; border-radius: 3px; transition: 0.3s; }
+        .dot.active { width: 24px; background: var(--primary); }
+    </style>
+</head>
+<body>
+
+    <div class="progress-indicator" id="dots-wrap"></div>
+
+    <!-- STEP 1: WELCOME -->
+    <div class="step-container active" id="step1">
+        <img src="https://media.tenor.com/pdv5YIMB-hkAAAAi/cute.gif" class="w-48 mb-6">
+        <h1 class="text-3xl font-extrabold text-gray-800 mb-2 text-center">Hey Khushi! ❤️</h1>
+        <p class="text-gray-500 mb-8 px-10 text-center italic">Prashant has a special 10-step journey for you. Ready?</p>
+        <button onclick="nextStep(2)" class="btn-next">Start the Magic ✨</button>
+    </div>
+
+    <!-- STEP 2: HOLD HANDS -->
+    <div class="step-container" id="step2">
+        <img src="https://media.tenor.com/dHSIL5HUotgAAAAj/hold-dudu-shake-hand.gif" class="w-56 mb-6">
+        <div class="glass-card">
+            <h2 class="text-2xl font-black text-gray-800 mb-4 text-center">Suno Khushi...</h2>
+            <p class="text-gray-600 italic leading-relaxed text-center">"Wese toh I'm very professional, par tumhara haath pakadne ka khayal aate hi mera system hang ho jata hai!"</p>
+        </div>
+        <button onclick="nextStep(3)" class="btn-next">Next Vibe →</button>
+    </div>
+
+    <!-- STEP 3: INTERACTIVE BEARS -->
+    <div class="step-container" id="step3">
+        <img src="https://media.tenor.com/WoY8ETlvYPoAAAAj/tkthao219-bubududu.gif" class="w-56 mb-6">
+        <div class="glass-card border-none shadow-none bg-transparent">
+            <h2 class="text-2xl font-bold text-gray-800 mb-2 text-center">Pata Hai?</h2>
+            <p class="text-gray-600 italic text-lg px-6 leading-relaxed text-center">"Tumhare saath har moment aisa lagta hai jaise kisi movie ka perfect scene chal rha ho." ❤️</p>
+        </div>
+        <button onclick="nextStep(4)" class="btn-next">Aww! 😂</button>
+    </div>
+
+    <!-- STEP 4: PIZZA -->
+    <div class="step-container" id="step4">
+        <img src="https://media.tenor.com/FpRtffe30hMAAAAi/pizza.gif" class="w-56 mb-6">
+        <div class="glass-card">
+            <h2 class="text-2xl font-black text-gray-800 mb-4 text-center">You & Me...</h2>
+            <p class="text-gray-600 leading-relaxed italic text-center">
+                "Khushi, tumhare bina meri life aisi hai jaise bina cheese ka Pizza... ek dum pheeka aur boring!" 🍕
+            </p>
+            <p class="mt-4 text-rose-500 font-bold text-center">"You are my extra topping! 😉"</p>
+        </div>
+        <button onclick="nextStep(5)" class="btn-next">Keep Going! →</button>
+    </div>
+
+    <!-- STEP 5: MAGICIAN CARD -->
+    <div class="step-container" id="step5">
+        <div class="glass-card">
+            <span class="text-[10px] font-bold tracking-[0.4em] text-rose-500 uppercase mb-4 block">Propose Day 2026</span>
+            <!-- Updated GIF URL -->
+            <img src="https://media.tenor.com/1SCCtcw_bg4AAAAi/magic-panda.gif" class="w-44 mx-auto mb-6">
+            <h2 class="text-2xl font-black text-gray-800 leading-tight mb-4 text-center">Are you a magician? ✨<br>Because your smile is <span class="text-rose-600">illegal</span>...</h2>
+            <p class="text-gray-500 italic mb-6">And I'm officially stolen by you. 😉</p>
+            <div class="h-px bg-gray-200 w-full mb-6"></div>
+            <p class="font-bold text-gray-800 cursive text-2xl text-center">Khushi & Prashant</p>
+        </div>
+        <button onclick="nextStep(6)" class="btn-next">Next Step →</button>
+    </div>
+
+    <!-- STEP 6: NEW INTERACTIVE BEARS -->
+    <div class="step-container" id="step6">
+        <img src="https://media.tenor.com/36d8ovZxZsgAAAAi/bubu-bubu-dudu.gif" class="w-56 mb-6">
+        <div class="glass-card border-none shadow-none bg-transparent text-center">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Pata Hai?</h2>
+            <p class="text-gray-600 italic text-lg px-6 leading-relaxed">"Tumhare saath rehna mere liye world ka best feel hai... Kabhi door mat jana!" 💖</p>
+        </div>
+        <button onclick="nextStep(7)" class="btn-next">Sachi! 😂</button>
+    </div>
+
+    <!-- STEP 7: WARNING -->
+    <div class="step-container" id="step7">
+        <img src="https://media1.tenor.com/m/L0OFpUCj9bkAAAAC/emote.gif" class="w-52 mb-6">
+        <h1 class="text-4xl font-black text-rose-600 mb-4 uppercase text-center">Wait! 🛑</h1>
+        <div class="glass-card bg-white/50">
+            <p class="font-bold text-gray-700 leading-tight text-center">Ab jo hone wala hai, usse rasta sirf ek hi taraf jaata hai... wapis aana impossible hai!</p>
+            <p class="mt-4 text-rose-600 font-black tracking-widest text-xs uppercase underline italic text-center">No Escape Zone!</p>
+        </div>
+        <button onclick="nextStep(8)" class="btn-next bg-black">I'm Ready! 😎</button>
+    </div>
+
+    <!-- STEP 8: THE TRAP SLIDER -->
+    <div class="step-container" id="step8">
+        <!-- Initial State GIF -->
+        <img id="proposal-gif" src="https://media.tenor.com/DXs3gd7Ce0kAAAAi/bubu-dudu-sseeyall.gif" class="w-48 mb-10 transition-opacity duration-300">
+        <h2 class="text-2xl font-extrabold text-gray-800 text-center mb-10 px-8 leading-tight">Khushi, will you be mine forever? ❤️</h2>
+        <div class="slider-track" id="track">
+            <span class="side-label font-black opacity-20">NO</span>
+            <div id="heart-btn" class="slider-heart"><span class="text-3xl">❤️</span></div>
+            <span class="side-label font-black opacity-20">YES</span>
+        </div>
+        <p id="trap-msg" class="mt-8 text-rose-600 font-bold italic text-center h-6 text-sm"></p>
+        <p class="mt-4 text-[10px] text-gray-400 font-bold tracking-[0.2em] uppercase">Slide Right to Accept</p>
+    </div>
+
+    <!-- STEP 9: REVEAL -->
+    <div class="step-container bg-rose-50" id="step9">
+        <img src="https://media1.tenor.com/m/yZZoDKXhRWYAAAAC/dudu-scared-bubu-dudu-kiss.gif" class="w-64 mb-6">
+        <div class="glass-card border-2 border-rose-200">
+            <h1 class="text-3xl font-black text-rose-600 mb-2 italic text-center">GOTCHA! 😂</h1>
+            <p class="text-xl font-bold text-gray-800 leading-tight text-center">"Ab rasta band hai, <br>Tu Prashant ke pyaar me <br>buri tarah <span class="text-rose-500 underline font-black">fas chuki hai</span>!" 🕸️❤️</p>
+        </div>
+        <button onclick="nextStep(10)" class="btn-next bg-gray-900">Final Surprise 🎉</button>
+    </div>
+
+    <!-- STEP 10: FINALE -->
+    <div class="step-container bg-white" id="step10">
+        <div class="text-center z-10">
+            <img src="https://media.tenor.com/BDP5eJeyZPQAAAAi/tkthao219-bubududu.gif" class="w-64 mx-auto mb-8">
+            <h1 class="cursive text-5xl text-rose-600 mb-4 text-center">Happy Propose Day!</h1>
+            <p class="text-xl font-bold text-gray-800 mb-8 tracking-wide text-center">My Beautiful Khushi ❤️</p>
+            <div class="glass-card mx-auto shadow-2xl border-none"><p class="font-medium text-gray-600 italic text-center">"I promise to keep your smile illegal and your heart safe forever."</p></div>
+            <p class="mt-12 text-gray-300 text-[10px] uppercase font-bold tracking-[0.6em] text-center">With Love, Prashant</p>
+            <button onclick="location.reload()" class="mt-8 text-gray-400 text-xs underline uppercase text-center">Replay</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script>
+        let current = 1;
+        const total = 10;
+        const trapQuotes = [
+            "Oops! Dil toh Prashant ke paas hi rahega! 😂",
+            "Nahi ja sakti! Tu mere pyaar me fas chuki hai! 😉",
+            "Left side is blocked for you! 🚫",
+            "Try harder, but destination Prashant hi hai! ❤️",
+            "Ab rasta band hai, No option not available! 🕸️"
+        ];
+
+        // Constants for GIF URLs
+        const GIF_INITIAL = "https://media.tenor.com/DXs3gd7Ce0kAAAAi/bubu-dudu-sseeyall.gif";
+        const GIF_NO = "https://media.tenor.com/moRhfDWGAIYAAAAi/bubu-dudu.gif";
+        const GIF_YES = "https://media.tenor.com/arLtVbLvu10AAAAi/bubu-dudu-sseeyall.gif";
+
+        // Setup dots
+        const dotsWrap = document.getElementById('dots-wrap');
+        for(let i=1; i<=total; i++) {
+            const d = document.createElement('div');
+            d.className = `dot ${i===1?'active':''}`;
+            d.id = `dot-${i}`;
+            dotsWrap.appendChild(d);
+        }
+
+        function nextStep(n) {
+            document.getElementById(`step${current}`).classList.remove('active');
+            current = n;
+            document.getElementById(`step${current}`).classList.add('active');
+            document.querySelectorAll('.dot').forEach((d, idx) => d.classList.toggle('active', (idx+1) === current));
+            if(n === 10) runConfetti();
+        }
+
+        // --- SLIDER ENGINE ---
+        const heart = document.getElementById('heart-btn');
+        const track = document.getElementById('track');
+        const trapMsg = document.getElementById('trap-msg');
+        const proposalImg = document.getElementById('proposal-gif');
+        let dragging = false;
+        let startX = 0;
+        let centerPos = 117; 
+
+        heart.addEventListener('mousedown', dStart);
+        heart.addEventListener('touchstart', dStart);
+        document.addEventListener('mousemove', dMove);
+        document.addEventListener('touchmove', dMove);
+        document.addEventListener('mouseup', dEnd);
+        document.addEventListener('touchend', dEnd);
+
+        function dStart(e) {
+            dragging = true;
+            startX = (e.type === 'mousedown') ? e.clientX : e.touches[0].clientX;
+            heart.style.transition = 'none';
+        }
+
+        function dMove(e) {
+            if (!dragging) return;
+            const x = (e.type === 'mousemove') ? e.clientX : e.touches[0].clientX;
+            let diff = x - startX;
+            let pos = centerPos + diff;
+            
+            if (pos < 0) pos = 0;
+            if (pos > 234) pos = 234;
+            heart.style.left = pos + 'px';
+
+            // Visual feedback while sliding No (Left)
+            if (pos < centerPos - 30) {
+                if(!proposalImg.src.includes("moRhfDWGAIYAAAAi")) {
+                    proposalImg.src = GIF_NO;
+                }
+            } else if (pos > centerPos + 30) {
+                if(!proposalImg.src.includes("arLtVbLvu10AAAAi")) {
+                    proposalImg.src = GIF_YES;
+                }
+            }
+
+            if (pos < 30) { 
+                dragging = false; 
+                snapBack(); 
+            }
+            if (pos > 215) { 
+                dragging = false; 
+                goSuccess(); 
+            }
+        }
+
+        function dEnd() { 
+            if (!dragging) return; 
+            dragging = false; 
+            snapBack(); 
+        }
+
+        function snapBack() {
+            heart.style.transition = 'all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+            heart.style.left = centerPos + 'px';
+            trapMsg.innerText = trapQuotes[Math.floor(Math.random() * trapQuotes.length)];
+            track.classList.add('shake');
+            
+            // Explicitly set the "No" GIF
+            proposalImg.src = GIF_NO;
+            
+            setTimeout(() => {
+                track.classList.remove('shake');
+            }, 400);
+        }
+
+        function goSuccess() {
+            heart.style.transition = 'all 0.3s ease';
+            heart.style.backgroundColor = '#22c55e';
+            heart.innerHTML = '<span class="text-white text-2xl">💍</span>';
+            
+            // Set the "Yes" GIF
+            proposalImg.src = GIF_YES;
+            
+            setTimeout(() => nextStep(9), 400);
+        }
+
+        function runConfetti() {
+            const stop = Date.now() + 10000;
+            (function frame() {
+                confetti({ particleCount: 3, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#e11d48', '#ffffff'] });
+                confetti({ particleCount: 3, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#e11d48', '#ffffff'] });
+                if (Date.now() < stop) requestAnimationFrame(frame);
+            }());
+        }
+    </script>
+</body>
+</html>
