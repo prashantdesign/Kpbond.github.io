@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Teddy Magic | Khushi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@500;700&family=Caveat:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --pink-light: #ffdeeb;
+            --pink-hot: #ff4d6d;
+            --bear-primary: #96694c;
+            --bear-secondary: #7a523a;
+        }
+
+        body {
+            background: #fff0f3;
+            font-family: 'Quicksand', sans-serif;
+            margin: 0;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: none; /* We'll use a custom heart cursor */
+        }
+
+        /* Magic Heart Cursor */
+        #custom-cursor {
+            position: fixed;
+            width: 25px;
+            height: 25px;
+            background: var(--pink-hot);
+            border-radius: 50% 50% 0 50%;
+            transform: rotate(-45deg);
+            pointer-events: none;
+            z-index: 9999;
+            box-shadow: 0 0 15px var(--pink-hot);
+            transition: width 0.1s, height 0.1s;
+        }
+
+        /* Floating Background Particles */
+        .sparkle {
+            position: absolute;
+            pointer-events: none;
+            animation: float-sparkle 3s ease-in-out infinite;
+            z-index: 1;
+        }
+
+        @keyframes float-sparkle {
+            0%, 100% { transform: translateY(0) scale(1); opacity: 0.5; }
+            50% { transform: translateY(-20px) scale(1.2); opacity: 1; }
+        }
+
+        /* 3D-ish Card Container */
+        .main-container {
+            position: relative;
+            width: 350px;
+            height: 550px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 40px;
+            border: 4px solid white;
+            box-shadow: 0 30px 60px rgba(255, 77, 109, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 30px;
+            z-index: 10;
+            overflow: hidden;
+        }
+
+        /* Teddy Eye Tracking & Animation */
+        .teddy-box {
+            position: relative;
+            width: 220px;
+            height: 220px;
+            cursor: grab;
+        }
+
+        .teddy-box:active { cursor: grabbing; }
+
+        .eye-container {
+            display: flex;
+            justify-content: space-around;
+            width: 80px;
+            position: absolute;
+            top: 85px;
+            left: 70px;
+            z-index: 5;
+        }
+
+        .eye-outer {
+            width: 18px;
+            height: 18px;
+            background: white;
+            border-radius: 50%;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #ddd;
+        }
+
+        .pupil {
+            width: 10px;
+            height: 10px;
+            background: #2d1b0d;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Advanced Animations */
+        .bounce-in { animation: bounceIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .shimmer {
+            background: linear-gradient(90deg, #ff4d6d, #ff85a2, #ff4d6d);
+            background-size: 200% auto;
+            color: white;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shimmer-text 2s linear infinite;
+        }
+
+        @keyframes shimmer-text {
+            to { background-position: 200% center; }
+        }
+
+        /* Interaction Elements */
+        .interaction-button {
+            background: var(--pink-hot);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: 700;
+            box-shadow: 0 10px 20px rgba(255, 77, 109, 0.3);
+            transition: all 0.3s;
+            transform: scale(1);
+        }
+
+        .interaction-button:active { transform: scale(0.9); }
+
+        /* Speech Bubble */
+        .speech-bubble {
+            position: absolute;
+            top: -40px;
+            background: white;
+            padding: 10px 15px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--pink-hot);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: 0.3s;
+            pointer-events: none;
+            width: 200px;
+            text-align: center;
+        }
+
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 8px solid white;
+        }
+
+        /* Touch Heart Trail */
+        .trail-heart {
+            position: fixed;
+            pointer-events: none;
+            animation: heart-fall 1s linear forwards;
+            z-index: 1000;
+        }
+
+        @keyframes heart-fall {
+            0% { transform: translateY(0) rotate(0) scale(1); opacity: 1; }
+            100% { transform: translateY(50px) rotate(90deg) scale(0); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="custom-cursor"></div>
+
+    <div class="main-container bounce-in">
+        <!-- Top Section -->
+        <div class="text-center">
+            <h1 class="text-3xl font-bold shimmer" style="font-family: 'Fredoka One', cursive;">Happy Teddy Day!</h1>
+            <p class="text-gray-500 font-bold text-sm tracking-widest mt-1">FOR MY CUTIE: KHUSHI</p>
+        </div>
+
+        <!-- Middle Interaction Zone -->
+        <div class="teddy-box" id="teddy-container">
+            <div id="speech" class="speech-bubble">Oye Khushi! 👋</div>
+            
+            <!-- SVG Teddy with layers for animation -->
+            <svg viewBox="0 0 200 200" id="teddy-svg" class="w-full h-full drop-shadow-2xl">
+                <!-- Shadow -->
+                <ellipse cx="100" cy="185" rx="50" ry="10" fill="rgba(0,0,0,0.05)" />
+                
+                <!-- Ears -->
+                <circle cx="65" cy="55" r="22" fill="#96694c" />
+                <circle cx="65" cy="55" r="12" fill="#D2B48C" />
+                <circle cx="135" cy="55" r="22" fill="#96694c" />
+                <circle cx="135" cy="55" r="12" fill="#D2B48C" />
+
+                <!-- Arms (Back) -->
+                <path id="arm-l" d="M40 120 Q30 150 50 160" stroke="#7a523a" stroke-width="25" stroke-linecap="round" fill="none" />
+                <path id="arm-r" d="M160 120 Q170 150 150 160" stroke="#7a523a" stroke-width="25" stroke-linecap="round" fill="none" />
+
+                <!-- Body -->
+                <circle id="body" cx="100" cy="130" r="55" fill="#96694c" />
+                <circle cx="100" cy="135" r="35" fill="#D2B48C" opacity="0.4" />
+
+                <!-- Head -->
+                <circle id="head" cx="100" cy="90" r="48" fill="#96694c" />
+                
+                <!-- Muzzle Area -->
+                <ellipse cx="100" cy="108" rx="18" ry="14" fill="#D2B48C" />
+                <path d="M96 102 L104 102 L100 108 Z" fill="#2d1b0d" />
+                <path d="M100 108 L100 115 M94 114 Q100 120 106 114" fill="none" stroke="#2d1b0d" stroke-width="2" stroke-linecap="round" />
+
+                <!-- Blushed Cheeks (Hidden by default) -->
+                <circle id="cheek-l" cx="72" cy="105" r="8" fill="#ff85a2" opacity="0" />
+                <circle id="cheek-r" cx="128" cy="105" r="8" fill="#ff85a2" opacity="0" />
+            </svg>
+
+            <!-- Real-time Eye Trackers overlaying SVG -->
+            <div class="eye-container">
+                <div class="eye-outer"><div class="pupil" id="pupil-l"></div></div>
+                <div class="eye-outer"><div class="pupil" id="pupil-r"></div></div>
+            </div>
+        </div>
+
+        <!-- Flirty Hinglish Prompt -->
+        <div id="flirty-display" class="text-center h-16 flex items-center px-4">
+            <p class="text-pink-600 font-bold italic text-lg leading-tight">Khushi, touch the teddy and see what happens! 😉</p>
+        </div>
+
+        <!-- Bottom Actions -->
+        <div class="w-full flex flex-col gap-3">
+            <button onclick="specialSurprise('hug')" class="interaction-button w-full">Give Tight Jhappi 🤗</button>
+            <button onclick="specialSurprise('tickle')" class="w-full py-2 text-pink-400 font-bold border-2 border-pink-100 rounded-full hover:bg-pink-50">Tickle Teddy 😂</button>
+        </div>
+        
+        <p class="text-[10px] text-gray-300 uppercase tracking-widest mt-4">Press & Hold to Squish</p>
+    </div>
+
+    <!-- Hidden Surprise Overlay -->
+    <div id="final-overlay" class="fixed inset-0 bg-white/90 z-[100] hidden items-center justify-center p-10 text-center">
+        <div>
+            <span class="text-6xl">🧸💖</span>
+            <h2 class="text-4xl font-bold text-pink-600 my-4" style="font-family: 'Caveat', cursive;">Oye My Favorite Teddy!</h2>
+            <p class="text-xl text-gray-700 leading-relaxed font-medium">
+                "Khushi, market wale teddy toh bas room mein sajte hain... par tum toh mere dil mein rehti ho! <br><br>
+                Happy Teddy Day to the only girl who is as cute and soft as a real bear (but definitely more khadoos 😉)!"
+            </p>
+            <button onclick="toggleOverlay(false)" class="mt-8 px-8 py-3 bg-pink-500 text-white rounded-full font-bold">Back to Play 🧸</button>
+        </div>
+    </div>
+
+    <script>
+        const cursor = document.getElementById('custom-cursor');
+        const teddyContainer = document.getElementById('teddy-container');
+        const speech = document.getElementById('speech');
+        const flirtyDisplay = document.getElementById('flirty-display');
+        const pupilL = document.getElementById('pupil-l');
+        const pupilR = document.getElementById('pupil-r');
+        const cheekL = document.getElementById('cheek-l');
+        const cheekR = document.getElementById('cheek-r');
+
+        const hinglishLines = [
+            "Khushi, tumhara favorite teddy toh main hi hoon na? 😉",
+            "Hayye! Kitna soft feel ho raha hai na? ❤️",
+            "Bas... ab aise hi hamesha pakad ke rakho!",
+            "Ek jhappi se kaam nahi chalega, Khushi!",
+            "Teddy toh bahana hai, mujhe toh tumhare paas aana hai! 🧸",
+            "Itni cute kyun ho tum? Sachi mein teddy ho!"
+        ];
+
+        // Custom Cursor & Eye Tracking
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            updateEyes(e.clientX, e.clientY);
+            if (Math.random() > 0.9) createTrailHeart(e.clientX, e.clientY);
+        });
+
+        document.addEventListener('touchmove', (e) => {
+            const touch = e.touches[0];
+            updateEyes(touch.clientX, touch.clientY);
+            createTrailHeart(touch.clientX, touch.clientY);
+        });
+
+        function updateEyes(mouseX, mouseY) {
+            const eyes = [pupilL, pupilR];
+            eyes.forEach(pupil => {
+                const rect = pupil.getBoundingClientRect();
+                const eyeX = rect.left + rect.width / 2;
+                const eyeY = rect.top + rect.height / 2;
+                const angle = Math.atan2(mouseY - eyeY, mouseX - eyeX);
+                const distance = Math.min(5, Math.hypot(mouseX - eyeX, mouseY - eyeY) / 15);
+                
+                const moveX = Math.cos(angle) * distance;
+                const moveY = Math.sin(angle) * distance;
+                
+                pupil.style.transform = `translate(calc(-50% + ${moveX}px), calc(-50% + ${moveY}px))`;
+            });
+        }
+
+        // Teddy Interactions
+        let hugTimer;
+        teddyContainer.addEventListener('mousedown', startSquish);
+        teddyContainer.addEventListener('mouseup', endSquish);
+        teddyContainer.addEventListener('touchstart', startSquish);
+        teddyContainer.addEventListener('touchend', endSquish);
+
+        function startSquish() {
+            document.getElementById('teddy-svg').style.transform = "scale(1.2) translateY(5px)";
+            cheekL.style.opacity = "1";
+            cheekR.style.opacity = "1";
+            showSpeech("Ohhh! Tight Jhappi? 🥰");
+            
+            // Random hinglish line
+            flirtyDisplay.innerHTML = `<p class='text-pink-600 font-bold italic text-lg'>${hinglishLines[Math.floor(Math.random() * hinglishLines.length)]}</p>`;
+        }
+
+        function endSquish() {
+            document.getElementById('teddy-svg').style.transform = "scale(1) translateY(0)";
+            cheekL.style.opacity = "0";
+            cheekR.style.opacity = "0";
+        }
+
+        function showSpeech(text) {
+            speech.innerText = text;
+            speech.style.opacity = "1";
+            speech.style.transform = "translateY(-10px) translateX(-50%)";
+            setTimeout(() => {
+                speech.style.opacity = "0";
+                speech.style.transform = "translateY(10px) translateX(-50%)";
+            }, 2000);
+        }
+
+        function specialSurprise(type) {
+            if(type === 'hug') {
+                for(let i=0; i<20; i++) setTimeout(() => createTrailHeart(window.innerWidth/2 + (Math.random()-0.5)*200, window.innerHeight/2 + (Math.random()-0.5)*200), i*50);
+                setTimeout(() => toggleOverlay(true), 1000);
+            } else {
+                showSpeech("Hahaha! Khushi stop it! 😂");
+                document.getElementById('teddy-svg').animate([
+                    { transform: 'rotate(0deg)' },
+                    { transform: 'rotate(10deg)' },
+                    { transform: 'rotate(-10deg)' },
+                    { transform: 'rotate(0deg)' }
+                ], { duration: 300, iterations: 3 });
+            }
+        }
+
+        function toggleOverlay(show) {
+            const overlay = document.getElementById('final-overlay');
+            overlay.style.display = show ? 'flex' : 'none';
+        }
+
+        function createTrailHeart(x, y) {
+            const h = document.createElement('div');
+            h.innerHTML = "❤️";
+            h.className = "trail-heart text-xl";
+            h.style.left = x + 'px';
+            h.style.top = y + 'px';
+            document.body.appendChild(h);
+            setTimeout(() => h.remove(), 1000);
+        }
+
+        // Initialize Background Sparkles
+        for(let i=0; i<15; i++) {
+            const s = document.createElement('div');
+            s.className = "sparkle text-2xl";
+            s.innerHTML = ["✨", "🧸", "💖", "🌸"][Math.floor(Math.random()*4)];
+            s.style.left = Math.random()*100 + "vw";
+            s.style.top = Math.random()*100 + "vh";
+            s.style.animationDelay = Math.random()*2 + "s";
+            document.body.appendChild(s);
+        }
+    </script>
+</body>
+</html>
+
