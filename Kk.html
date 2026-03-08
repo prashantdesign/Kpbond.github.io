@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Funny Face Cricket</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #87CEEB;
+            touch-action: none;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        canvas {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+        }
+        .ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        .interactive {
+            pointer-events: auto;
+        }
+        .text-shadow {
+            text-shadow: 2px 2px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Game Canvas -->
+    <canvas id="gameCanvas"></canvas>
+
+    <!-- UI Overlay -->
+    <div class="ui-layer flex flex-col justify-between p-4 md:p-8 z-10">
+        <!-- Header -->
+        <div class="flex justify-between items-start">
+            <div class="bg-white/90 p-3 rounded-xl shadow-lg interactive border-2 border-blue-200">
+                <h1 class="text-2xl md:text-3xl font-black text-blue-600">SCORE: <span id="scoreDisplay">0</span></h1>
+                <p class="text-lg font-bold text-gray-700">Balls Left: <span id="ballsDisplay">6</span></p>
+            </div>
+            <div class="bg-white/90 p-2 rounded-xl shadow-lg hidden md:block border-2 border-gray-200">
+                <p class="text-sm font-bold text-gray-600">Spacebar or Tap Canvas to Swing!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Start Menu Modal -->
+    <div id="startScreen" class="ui-layer flex items-center justify-center bg-black/70 interactive z-50">
+        <div class="bg-white p-8 rounded-2xl shadow-2xl text-center max-w-md w-full mx-4 border-4 border-blue-500">
+            <h1 class="text-4xl font-black text-blue-600 mb-2 text-shadow text-white">FACE CRICKET</h1>
+            <p class="text-md text-gray-700 mb-6 font-semibold">Time your swing to smash the face! Don't let it hit the stumps!</p>
+            
+            <div class="flex justify-center mb-6">
+                <div class="w-24 h-24 rounded-full border-4 border-blue-500 overflow-hidden bg-gray-200 flex items-center justify-center">
+                    <img id="previewImage" src="" alt="Ball Face" class="w-full h-full object-cover hidden">
+                    <span id="loadingText" class="text-xs text-gray-500 font-bold">Loading Face...</span>
+                </div>
+            </div>
+
+            <button id="startBtn" class="w-full bg-green-500 hover:bg-green-600 text-white font-black py-4 px-6 rounded-xl text-2xl shadow-lg transform transition hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed">
+                PLAY NOW
+            </button>
+        </div>
+    </div>
+
+    <!-- Game Over Modal -->
+    <div id="gameOverScreen" class="ui-layer items-center justify-center bg-black/80 interactive z-50" style="display: none;">
+        <div class="bg-white p-8 rounded-2xl shadow-2xl text-center max-w-md w-full mx-4 border-4 border-red-500">
+            <h1 class="text-5xl font-black text-red-600 mb-2">INNINGS OVER!</h1>
+            <p class="text-2xl text-gray-700 mb-6 font-bold">Total Score: <span id="finalScore" class="text-blue-600 text-5xl block mt-2">0</span></p>
+            <button id="restartBtn" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-black py-4 px-6 rounded-xl text-2xl shadow-lg transform transition hover:scale-105">
+                PLAY AGAIN
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // UI Elements
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        const ballsDisplay = document.getElementById('ballsDisplay');
+        const startScreen = document.getElementById('startScreen');
+        const gameOverScreen = document.getElementById('gameOverScreen');
+        const finalScore = document.getElementById('finalScore');
+        const startBtn = document.getElementById('startBtn');
+        const restartBtn = document.getElementById('restartBtn');
+        const previewImage = document.getElementById('previewImage');
+        const loadingText = document.getElementById('loadingText');
+
+        // DIRECT GOOGLE DRIVE IMAGE LOADING (Via Image Proxy for Canvas CORS bypassing)
+        const faceImg = new Image();
+        faceImg.crossOrigin = "Anonymous";
+        let imageLoaded = false;
+
+        // Using wsrv.nl to proxy the Google drive image directly
+        const driveId = '1TSdIIhqV5FRMXZSmWCacBSneVDRgchzp';
+        const driveUrl = `https://drive.google.com/uc?id=${driveId}`;
+        const proxyUrl = `https://wsrv.nl/?url=${encodeURIComponent(driveUrl)}&w=200&h=200&fit=cover`;
+
+        faceImg.src = proxyUrl;
+        
+        faceImg.onload = () => { 
+            imageLoaded = true;
+            // Update preview on start screen
+            previewImage.src = faceImg.src;
+            previewImage.classList.remove('hidden');
+            loadingText.classList.add('hidden');
+            console.log("Direct Drive Image loaded successfully!");
+        };
+
+        // Game State
+        let state = 'menu';
+        let score = 0;
+        let ballsLeft = 6;
+        let frameCount = 0;
+        
+        // Physics & World
+        let groundY, pitchY, hitZoneX;
+        let scale = 1;
+
+        // Entities
+        let ball = { x: 0, y: 0, vx: 0, vy: 0, radius: 25, angle: 0, spin: 0, active: false };
+        let bat = { x: 0, y: 0, angle: -Math.PI / 6, targetAngle: -Math.PI / 6, swinging: false, length: 100, width: 15 };
+        let stumps = [];
+        let floatingTexts = [];
+
+        // Funny phrases
+        const hitPhrases = ["YEET!", "SMASHED!", "BONK!", "TO THE MOON!", "CRACK!", "BOOM!", "OUTTA HERE!"];
+        const missPhrases = ["OOF!", "BOWLED HIM!", "F IN CHAT", "WHOOSH", "YIKES!"];
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            groundY = canvas.height * 0.7;
+            pitchY = groundY;
+            hitZoneX = canvas.width * 0.2;
+            
+            scale = Math.min(canvas.width / 1000, canvas.height / 600);
+            scale = Math.max(scale, 0.5);
+            
+            ball.radius = 25 * scale;
+            bat.length = 120 * scale;
+            bat.width = 15 * scale;
+            bat.x = hitZoneX;
+            bat.y = pitchY - 60 * scale;
+
+            resetStumps();
+        }
+
+        function resetStumps() {
+            const stumpSpacing = 12 * scale;
+            stumps = [
+                { id: 1, x: hitZoneX - 40 * scale - stumpSpacing, y: pitchY, vx: 0, vy: 0, angle: 0, active: true },
+                { id: 2, x: hitZoneX - 40 * scale, y: pitchY, vx: 0, vy: 0, angle: 0, active: true },
+                { id: 3, x: hitZoneX - 40 * scale + stumpSpacing, y: pitchY, vx: 0, vy: 0, angle: 0, active: true }
+            ];
+        }
+
+        function spawnText(text, x, y, color) {
+            floatingTexts.push({ text, x, y, vy: -3, life: 60, color });
+        }
+
+        function startGame() {
+            score = 0;
+            ballsLeft = 6;
+            scoreDisplay.innerText = score;
+            ballsDisplay.innerText = ballsLeft;
+            
+            startScreen.style.display = 'none';
+            gameOverScreen.style.display = 'none';
+            
+            floatingTexts = [];
+            resetStumps();
+            nextBallReady();
+        }
+
+        function nextBallReady() {
+            if (ballsLeft <= 0) {
+                endGame();
+                return;
+            }
+            state = 'ready';
+            ball.active = false;
+            resetStumps();
+            bat.angle = -Math.PI / 6;
+            bat.swinging = false;
+            
+            setTimeout(bowlBall, 1000);
+        }
+
+        function bowlBall() {
+            if (state !== 'ready') return;
+            state = 'bowling';
+            ballsLeft--;
+            ballsDisplay.innerText = ballsLeft;
+            
+            ball.x = canvas.width + ball.radius;
+            ball.y = pitchY - 150 * scale - Math.random() * 100;
+            
+            const speedVar = canvas.width > 600 ? 15 * scale : 10 * scale; 
+            ball.vx = -speedVar - (Math.random() * 5 * scale);
+            ball.vy = 2 * scale;
+            ball.spin = (Math.random() - 0.5) * 0.5;
+            ball.active = true;
+        }
+
+        function swingBat() {
+            if (state === 'menu' || state === 'ready') return;
+            
+            bat.swinging = true;
+            bat.targetAngle = Math.PI / 2;
+
+            if (state === 'bowling') {
+                const distX = Math.abs(ball.x - hitZoneX);
+                const distY = Math.abs(ball.y - (pitchY - bat.length/2));
+
+                if (distX < 60 * scale && distY < bat.length) {
+                    state = 'hit';
+                    let runScored = 0;
+                    let phrase = "";
+                    let color = "";
+
+                    if (distX < 20 * scale) {
+                        runScored = 6;
+                        phrase = hitPhrases[Math.floor(Math.random() * hitPhrases.length)];
+                        color = "#FFD700";
+                        ball.vx = (Math.random() * 10 + 15) * scale;
+                        ball.vy = -(Math.random() * 10 + 15) * scale;
+                        ball.spin = 1.0; 
+                    } else if (distX < 45 * scale) {
+                        runScored = 4;
+                        phrase = "NICE HIT!";
+                        color = "#00FF00";
+                        ball.vx = (Math.random() * 5 + 10) * scale;
+                        ball.vy = -(Math.random() * 5 + 8) * scale;
+                        ball.spin = 0.5;
+                    } else {
+                        runScored = Math.floor(Math.random() * 2) + 1;
+                        phrase = "TICKLED!";
+                        color = "#FFFFFF";
+                        ball.vx = (Math.random() * 5 + 5) * scale;
+                        ball.vy = -(Math.random() * 5 + 2) * scale;
+                        ball.spin = 0.2;
+                    }
+
+                    score += runScored;
+                    scoreDisplay.innerText = score;
+                    spawnText(phrase + ` (${runScored})`, bat.x, bat.y - 50, color);
+                    
+                    setTimeout(nextBallReady, 2000);
+                }
+            }
+        }
+
+        function endGame() {
+            state = 'menu';
+            finalScore.innerText = score;
+            gameOverScreen.style.display = 'flex';
+        }
+
+        function update() {
+            frameCount++;
+
+            if (bat.swinging) {
+                bat.angle += (bat.targetAngle - bat.angle) * 0.3;
+                if (bat.angle > bat.targetAngle - 0.1) {
+                    bat.targetAngle = -Math.PI / 6;
+                }
+                if (bat.angle < -Math.PI / 6 + 0.1 && bat.targetAngle === -Math.PI / 6) {
+                    bat.swinging = false;
+                }
+            }
+
+            if (ball.active) {
+                ball.x += ball.vx;
+                ball.y += ball.vy;
+                ball.angle += ball.spin;
+
+                if (state === 'bowling') {
+                    ball.vy += 0.4 * scale;
+                    
+                    if (ball.y + ball.radius > pitchY && ball.vy > 0) {
+                        ball.y = pitchY - ball.radius;
+                        ball.vy *= -0.7;
+                        ball.spin += (Math.random() - 0.5) * 0.2; 
+                        spawnText("BOING!", ball.x, ball.y - 20, "#FFFFFF88");
+                    }
+
+                    if (ball.x < hitZoneX - 40 * scale) {
+                        state = 'missed';
+                        ball.vx = -2 * scale;
+                        ball.vy = 2 * scale;
+                        
+                        if (ball.y > pitchY - 80 * scale) {
+                            spawnText(missPhrases[Math.floor(Math.random() * missPhrases.length)], hitZoneX, pitchY - 100, "#FF0000");
+                            stumps.forEach(s => {
+                                s.active = false;
+                                s.vx = (Math.random() * -10 - 5) * scale;
+                                s.vy = (Math.random() * -10 - 5) * scale;
+                            });
+                        } else {
+                            spawnText("MISSED!", hitZoneX, pitchY - 100, "#FFA500");
+                        }
+                        
+                        setTimeout(nextBallReady, 2000);
+                    }
+                } else if (state === 'hit') {
+                    ball.vy += 0.3 * scale;
+                }
+            }
+
+            for (let i = floatingTexts.length - 1; i >= 0; i--) {
+                let t = floatingTexts[i];
+                t.y += t.vy;
+                t.life--;
+                if (t.life <= 0) floatingTexts.splice(i, 1);
+            }
+
+            stumps.forEach(s => {
+                if (!s.active) {
+                    s.x += s.vx;
+                    s.y += s.vy;
+                    s.vy += 0.5 * scale;
+                    s.angle += 0.2;
+                }
+            });
+        }
+
+        function drawFace(ctx, x, y, radius, angle) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(angle);
+            
+            if (imageLoaded) {
+                // Creates a perfect circle mask for your image
+                ctx.beginPath();
+                ctx.arc(0, 0, radius, 0, Math.PI * 2);
+                ctx.closePath();
+                ctx.clip();
+                
+                // Draw your actual Drive image!
+                ctx.drawImage(faceImg, -radius, -radius, radius * 2, radius * 2);
+                
+                // Outline
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = '#000';
+                ctx.stroke();
+            } else {
+                // Fallback yellow face if it hasn't loaded yet
+                ctx.beginPath();
+                ctx.arc(0, 0, radius, 0, Math.PI * 2);
+                ctx.fillStyle = '#FFDE59';
+                ctx.fill();
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                ctx.fillStyle = '#000';
+                ctx.beginPath();
+                ctx.arc(-radius*0.3, -radius*0.2, radius*0.15, 0, Math.PI*2);
+                ctx.arc(radius*0.3, -radius*0.2, radius*0.15, 0, Math.PI*2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.arc(0, radius*0.3, radius*0.2, 0, Math.PI*2);
+                ctx.fill();
+            }
+            
+            ctx.restore();
+        }
+
+        function draw() {
+            ctx.fillStyle = '#87CEEB';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#FFD700';
+            ctx.beginPath();
+            ctx.arc(canvas.width - 80 * scale, 80 * scale, 40 * scale, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = '#556B2F'; 
+            ctx.fillRect(0, groundY, canvas.width, canvas.height - groundY);
+            
+            ctx.fillStyle = '#D2B48C'; 
+            ctx.fillRect(hitZoneX - 100 * scale, groundY, canvas.width, 100 * scale);
+            ctx.fillStyle = '#FFFFFF'; 
+            ctx.fillRect(hitZoneX, groundY, 4 * scale, 100 * scale);
+
+            ctx.lineWidth = 4 * scale;
+            ctx.strokeStyle = '#8B4513';
+            ctx.lineCap = 'round';
+            stumps.forEach(s => {
+                ctx.save();
+                ctx.translate(s.x, s.y);
+                if (!s.active) ctx.rotate(s.angle);
+                
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.lineTo(0, -80 * scale);
+                ctx.stroke();
+                ctx.restore();
+            });
+
+            ctx.save();
+            ctx.translate(bat.x, bat.y);
+            ctx.rotate(bat.angle);
+            ctx.fillStyle = '#808080';
+            ctx.fillRect(-bat.width/4, -bat.length*0.2, bat.width/2, bat.length*0.2);
+            ctx.fillStyle = '#DEB887'; 
+            ctx.fillRect(-bat.width/2, 0, bat.width, bat.length*0.8);
+            ctx.strokeRect(-bat.width/2, 0, bat.width, bat.length*0.8);
+            ctx.restore();
+
+            if (ball.active) {
+                drawFace(ctx, ball.x, ball.y, ball.radius, ball.angle);
+            }
+
+            ctx.textAlign = 'center';
+            floatingTexts.forEach(t => {
+                ctx.font = `900 ${30 * scale}px 'Segoe UI', Arial`;
+                ctx.fillStyle = t.color;
+                ctx.lineWidth = 4;
+                ctx.strokeStyle = '#000000';
+                ctx.strokeText(t.text, t.x, t.y);
+                ctx.fillText(t.text, t.x, t.y);
+            });
+            
+            if (state === 'bowling' || state === 'ready') {
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+                ctx.beginPath();
+                ctx.arc(hitZoneX, pitchY - 40*scale, 50*scale, 0, Math.PI*2);
+                ctx.fill();
+            }
+        }
+
+        function gameLoop() {
+            update();
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+
+        window.addEventListener('resize', resize);
+        
+        const handleSwing = (e) => {
+            if (state === 'menu') return;
+            if (e.type === 'touchstart') e.preventDefault();
+            swingBat();
+        };
+
+        canvas.addEventListener('mousedown', handleSwing);
+        canvas.addEventListener('touchstart', handleSwing, {passive: false});
+        
+        window.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') swingBat();
+        });
+
+        startBtn.addEventListener('click', startGame);
+        restartBtn.addEventListener('click', startGame);
+
+        resize();
+        gameLoop();
+
+    </script>
+</body>
+</html>
+
+
